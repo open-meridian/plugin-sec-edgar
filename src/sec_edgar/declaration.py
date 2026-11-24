@@ -1,0 +1,34 @@
+"""What this version declares beside its role: from contract v25 the whole
+of what it says about itself.
+
+Built from the plugin's code and used twice: `__main__` registers with it,
+and `meridian plugin upload` reads the same one from the built image
+(pyproject.toml's `[tool.meridian] declaration`), with the documentation's
+texts beside it. A version registers exactly the declaration it was uploaded
+with, so beside its settings, catalogue and storage (declared.py,
+settings.py) it carries its interface -- its pages, with the levels each
+serves, and the tools their typed routes make -- on a port fixed here, never
+read from the environment, and the vendor's documentation, the Markdown in
+`docs/` (`/plugin/docs` in its image).
+"""
+
+from __future__ import annotations
+
+import meridian
+from meridian.declaration import Declaration, Storage
+
+from .declared import CATALOGUE, RESPONSES_KIND
+from .page import TITLE, pages
+from .raw import MOST_WINDOW_DAYS
+from .settings import DECLARED
+
+#: The port its pages are served on, on loopback, where its sidecar forwards.
+PORT = 8000
+
+DECLARATION = Declaration(
+    settings=DECLARED,
+    storage=Storage(retention_days=MOST_WINDOW_DAYS, kinds=[RESPONSES_KIND]),
+    catalogue=CATALOGUE,
+    interface=meridian.Interface(port=PORT, title=TITLE, pages=pages),
+    documentation="docs",
+)

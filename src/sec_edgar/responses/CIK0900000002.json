@@ -1,0 +1,134 @@
+{
+ "cik": "900000002",
+ "entityType": "operating",
+ "sic": "6719",
+ "sicDescription": "Offices of Holding Companies, NEC",
+ "ownerOrg": "",
+ "insiderTransactionForOwnerExists": 0,
+ "insiderTransactionForIssuerExists": 1,
+ "name": "Contoso Holdings Inc",
+ "tickers": [
+  "ZZCT"
+ ],
+ "exchanges": [
+  "NYSE"
+ ],
+ "ein": "000000000",
+ "lei": null,
+ "description": "",
+ "website": "",
+ "investorWebsite": "",
+ "category": "Large accelerated filer",
+ "fiscalYearEnd": "1231",
+ "stateOfIncorporation": "DE",
+ "stateOfIncorporationDescription": "DE",
+ "addresses": {
+  "mailing": {
+   "street1": "1 Example Way",
+   "street2": null,
+   "city": "Example City",
+   "stateOrCountry": "NY",
+   "zipCode": "10000",
+   "stateOrCountryDescription": "NY",
+   "isForeignLocation": 0,
+   "foreignStateTerritory": null,
+   "country": null,
+   "countryCode": null
+  },
+  "business": {
+   "street1": "1 Example Way",
+   "street2": null,
+   "city": "Example City",
+   "stateOrCountry": "NY",
+   "zipCode": "10000",
+   "stateOrCountryDescription": "NY",
+   "isForeignLocation": 0,
+   "foreignStateTerritory": null,
+   "country": null,
+   "countryCode": null
+  }
+ },
+ "phone": "000-000-0000",
+ "flags": "",
+ "formerNames": [],
+ "filings": {
+  "recent": {
+   "accessionNumber": [
+    "0001193125-26-301122",
+    "0001193125-26-288010",
+    "0001193125-26-120233"
+   ],
+   "filingDate": [
+    "2026-11-18",
+    "2026-11-04",
+    "2026-03-02"
+   ],
+   "reportDate": [
+    "2026-11-17",
+    "2026-09-30",
+    "2025-12-31"
+   ],
+   "acceptanceDateTime": [
+    "2026-11-18T12:01:09.000Z",
+    "2026-11-04T21:20:40.000Z",
+    "2026-03-02T21:08:15.000Z"
+   ],
+   "act": [
+    "34",
+    "34",
+    "34"
+   ],
+   "form": [
+    "8-K",
+    "10-Q",
+    "10-K"
+   ],
+   "fileNumber": [
+    "001-10002",
+    "001-10002",
+    "001-10002"
+   ],
+   "filmNumber": [
+    "26000000",
+    "26000001",
+    "26000002"
+   ],
+   "items": [
+    "8.01,9.01",
+    "",
+    ""
+   ],
+   "core_type": [
+    "8-K",
+    "10-Q",
+    "10-K"
+   ],
+   "size": [
+    150000,
+    151000,
+    152000
+   ],
+   "isXBRL": [
+    1,
+    1,
+    1
+   ],
+   "isInlineXBRL": [
+    1,
+    1,
+    1
+   ],
+   "primaryDocument": [
+    "ctso-20261117.htm",
+    "ctso-20260930.htm",
+    "ctso-20251231.htm"
+   ],
+   "primaryDocDescription": [
+    "8-K",
+    "10-Q",
+    "10-K"
+   ]
+  },
+  "files": []
+ }
+}

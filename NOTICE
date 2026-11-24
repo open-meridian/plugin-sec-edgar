@@ -1,0 +1,9 @@
+meridian-sec-edgar
+Copyright 2026 Societal Lab Inc.
+
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+The filings this plugin reads are public records served by the U.S.
+Securities and Exchange Commission through EDGAR. This project is not
+affiliated with, endorsed by or certified by the U.S. Securities and
+Exchange Commission.
