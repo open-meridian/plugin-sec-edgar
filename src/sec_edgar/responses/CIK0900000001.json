@@ -1,0 +1,212 @@
+{
+ "cik": "900000001",
+ "entityType": "operating",
+ "sic": "3826",
+ "sicDescription": "Laboratory Analytical Instruments",
+ "ownerOrg": "",
+ "insiderTransactionForOwnerExists": 0,
+ "insiderTransactionForIssuerExists": 1,
+ "name": "Northwind Instruments Corp",
+ "tickers": [
+  "ZZNW"
+ ],
+ "exchanges": [
+  "Nasdaq"
+ ],
+ "ein": "000000000",
+ "lei": null,
+ "description": "",
+ "website": "",
+ "investorWebsite": "",
+ "category": "Large accelerated filer",
+ "fiscalYearEnd": "1231",
+ "stateOfIncorporation": "DE",
+ "stateOfIncorporationDescription": "DE",
+ "addresses": {
+  "mailing": {
+   "street1": "1 Example Way",
+   "street2": null,
+   "city": "Example City",
+   "stateOrCountry": "NY",
+   "zipCode": "10000",
+   "stateOrCountryDescription": "NY",
+   "isForeignLocation": 0,
+   "foreignStateTerritory": null,
+   "country": null,
+   "countryCode": null
+  },
+  "business": {
+   "street1": "1 Example Way",
+   "street2": null,
+   "city": "Example City",
+   "stateOrCountry": "NY",
+   "zipCode": "10000",
+   "stateOrCountryDescription": "NY",
+   "isForeignLocation": 0,
+   "foreignStateTerritory": null,
+   "country": null,
+   "countryCode": null
+  }
+ },
+ "phone": "000-000-0000",
+ "flags": "",
+ "formerNames": [
+  {
+   "name": "NORTHWIND LABS INC",
+   "from": "2004-06-01T00:00:00.000Z",
+   "to": "2019-03-14T00:00:00.000Z"
+  },
+  {
+   "name": "NORTHWIND LABORATORIES INC",
+   "from": "1996-02-12T00:00:00.000Z",
+   "to": "2004-05-28T00:00:00.000Z"
+  }
+ ],
+ "filings": {
+  "recent": {
+   "accessionNumber": [
+    "0000900000-26-000041",
+    "0000900000-26-000038",
+    "0001214659-26-009911",
+    "0000900000-26-000030",
+    "0000900000-26-000021",
+    "0000900000-26-000012",
+    "0000950103-26-002210"
+   ],
+   "filingDate": [
+    "2026-11-20",
+    "2026-11-05",
+    "2026-10-14",
+    "2026-08-06",
+    "2026-04-02",
+    "2026-02-26",
+    "2026-02-11"
+   ],
+   "reportDate": [
+    "2026-11-19",
+    "2026-09-30",
+    "2026-10-10",
+    "2026-08-05",
+    "2026-05-14",
+    "2025-12-31",
+    ""
+   ],
+   "acceptanceDateTime": [
+    "2026-11-20T16:05:31.000Z",
+    "2026-11-05T17:12:08.000Z",
+    "2026-10-14T18:44:02.000Z",
+    "2026-08-06T16:31:44.000Z",
+    "2026-04-02T09:15:20.000Z",
+    "2026-02-26T16:42:57.000Z",
+    "2026-02-11T11:02:13.000Z"
+   ],
+   "act": [
+    "34",
+    "34",
+    "",
+    "34",
+    "34",
+    "34",
+    ""
+   ],
+   "form": [
+    "8-K",
+    "10-Q",
+    "4",
+    "8-K",
+    "DEF 14A",
+    "10-K",
+    "SC 13G/A"
+   ],
+   "fileNumber": [
+    "001-10001",
+    "001-10001",
+    "",
+    "001-10001",
+    "001-10001",
+    "001-10001",
+    ""
+   ],
+   "filmNumber": [
+    "26000000",
+    "26000001",
+    "",
+    "26000003",
+    "26000004",
+    "26000005",
+    "26000006"
+   ],
+   "items": [
+    "2.02,9.01",
+    "",
+    "",
+    "5.02",
+    "",
+    "",
+    ""
+   ],
+   "core_type": [
+    "8-K",
+    "10-Q",
+    "4",
+    "8-K",
+    "DEF 14A",
+    "10-K",
+    "SC 13G/A"
+   ],
+   "size": [
+    150000,
+    151000,
+    152000,
+    153000,
+    154000,
+    155000,
+    156000
+   ],
+   "isXBRL": [
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0
+   ],
+   "isInlineXBRL": [
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0
+   ],
+   "primaryDocument": [
+    "nwnd-20261119.htm",
+    "nwnd-20260930.htm",
+    "xslF345X05/form4.xml",
+    "nwnd-20260805.htm",
+    "nwnd-def14a.htm",
+    "nwnd-20251231.htm",
+    "xslSCHEDULE_13G_X01/primary_doc.xml"
+   ],
+   "primaryDocDescription": [
+    "8-K",
+    "10-Q",
+    "PRIMARY DOCUMENT",
+    "8-K",
+    "DEF 14A",
+    "10-K",
+    "SCHEDULE 13G/A"
+   ]
+  },
+  "files": [
+   {
+    "name": "CIK0900000001-submissions-001.json",
+    "filingCount": 3,
+    "filingFrom": "1996-03-28",
+    "filingTo": "2025-11-06"
+   }
+  ]
+ }
+}

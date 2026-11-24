@@ -1,0 +1,134 @@
+{
+ "cik": "900000003",
+ "entityType": "operating",
+ "sic": "4911",
+ "sicDescription": "Electric Services",
+ "ownerOrg": "",
+ "insiderTransactionForOwnerExists": 0,
+ "insiderTransactionForIssuerExists": 1,
+ "name": "Fabrikam Energy Co",
+ "tickers": [
+  "ZZFB"
+ ],
+ "exchanges": [
+  "NYSE"
+ ],
+ "ein": "000000000",
+ "lei": null,
+ "description": "",
+ "website": "",
+ "investorWebsite": "",
+ "category": "Large accelerated filer",
+ "fiscalYearEnd": "1231",
+ "stateOfIncorporation": "TX",
+ "stateOfIncorporationDescription": "TX",
+ "addresses": {
+  "mailing": {
+   "street1": "1 Example Way",
+   "street2": null,
+   "city": "Example City",
+   "stateOrCountry": "NY",
+   "zipCode": "10000",
+   "stateOrCountryDescription": "NY",
+   "isForeignLocation": 0,
+   "foreignStateTerritory": null,
+   "country": null,
+   "countryCode": null
+  },
+  "business": {
+   "street1": "1 Example Way",
+   "street2": null,
+   "city": "Example City",
+   "stateOrCountry": "NY",
+   "zipCode": "10000",
+   "stateOrCountryDescription": "NY",
+   "isForeignLocation": 0,
+   "foreignStateTerritory": null,
+   "country": null,
+   "countryCode": null
+  }
+ },
+ "phone": "000-000-0000",
+ "flags": "",
+ "formerNames": [],
+ "filings": {
+  "recent": {
+   "accessionNumber": [
+    "0001628280-26-071510",
+    "0001628280-26-066020",
+    "0001628280-26-010330"
+   ],
+   "filingDate": [
+    "2026-11-12",
+    "2026-10-30",
+    "2026-02-20"
+   ],
+   "reportDate": [
+    "2026-11-10",
+    "2026-09-30",
+    "2025-12-31"
+   ],
+   "acceptanceDateTime": [
+    "2026-11-12T16:47:02.000Z",
+    "2026-10-30T06:32:51.000Z",
+    "2026-02-20T16:15:39.000Z"
+   ],
+   "act": [
+    "34",
+    "34",
+    "34"
+   ],
+   "form": [
+    "8-K",
+    "10-Q",
+    "10-K"
+   ],
+   "fileNumber": [
+    "001-10003",
+    "001-10003",
+    "001-10003"
+   ],
+   "filmNumber": [
+    "26000000",
+    "26000001",
+    "26000002"
+   ],
+   "items": [
+    "1.01,2.03,9.01",
+    "",
+    ""
+   ],
+   "core_type": [
+    "8-K",
+    "10-Q",
+    "10-K"
+   ],
+   "size": [
+    150000,
+    151000,
+    152000
+   ],
+   "isXBRL": [
+    1,
+    1,
+    1
+   ],
+   "isInlineXBRL": [
+    1,
+    1,
+    1
+   ],
+   "primaryDocument": [
+    "fbrk-20261110.htm",
+    "fbrk-20260930.htm",
+    "fbrk-20251231.htm"
+   ],
+   "primaryDocDescription": [
+    "8-K",
+    "10-Q",
+    "10-K"
+   ]
+  },
+  "files": []
+ }
+}

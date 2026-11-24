@@ -1,6 +1,17 @@
+{#- Connection, at admin: the data role's (meridian/roles/data/connection.html),
+    with EDGAR's nuance at its blocks only -- the head's status; a notice
+    naming edgar_user_agent while it is missing or malformed; "Sources" (one
+    line per EDGAR source read) as a row of "Key"; and the pace as a row of
+    "Limits and use". EDGAR is polled, so the role draws no "Sessions".
+    Whether the User-Agent is set is said; its value never is. No filing. -#}
 {% extends "meridian/roles/data/connection.html" %}
-{#- The vendor's nuance, at the role's blocks only: here, a section naming
-    the vendor after the common ones. -#}
-{% block vendor_sections %}
-<section class="panel"><h2>Reference vendor</h2><p class="muted">A stand-in vendor serving daily candles; replace it with your own.</p></section>
-{% endblock %}
+{% import "meridian/kit.html" as kit %}
+{% block status %}{{ kit.status({"state": data.state, "label": data.said, "detail": detail, "at": data.checked_at, "at_label": "Last checked"}) }}{% endblock %}
+{% block vendor_notices %}{% if data.waiting %}<div class="notice warn" role="status" data-waiting>Waiting: {{ data.waiting }}. SEC asks every automated client to declare a company or person's name and a contact email address, as Example Co admin@example.com. Nothing is asked of SEC until it is set in Settings.</div>{% endif %}{% endblock %}
+{% block vendor_rows %}{% if section == "Key" and data.mode != "No key" %}
+<tr data-sources><th scope="row">Sources</th><td>{{ data.sources|length }}: {% for s in data.sources %}{{ s.source }} {{ s.state|lower }}{% if not loop.last %}; {% endif %}{% endfor %}</td><td class="more"><details class="row-detail" name="facts"><summary aria-label="Details of Sources">…</summary><div class="row-detail-pop"><h3>Sources</h3><table class="one-line"><thead><tr><th>Source</th><th>State</th><th>Latest filing</th><th class="num">Calls</th></tr></thead><tbody>
+{% for s in data.sources %}<tr data-source="{{ s.source }}"><td>{{ s.source }} <span class="hint">{{ s.address }}</span></td><td>{{ s.state }}{% if s.last_error %} <span class="hint">{{ s.last_error }}</span>{% endif %}</td><td>{{ (s.last_release|day) if s.last_release else "Not yet" }}</td><td class="num">{{ s.calls }}</td></tr>
+{% endfor %}</tbody></table><p class="hint">Read from {{ data.source }}. Kept current: {{ (data.kept_current ~ " companies") if data.kept_current else "none; each company's filings are fetched when wanted" }}. Next expected: not known, since filings arrive when companies file. Answers kept: {{ data.responses_kept }}{% if data.kept_for %}, {{ data.kept_for }}{% endif %}.</p></div></details></td></tr>
+{% elif section == "Limits and use" %}
+<tr data-pace><th scope="row">Pace</th><td>{{ data.per_second }} requests a second at most{% if data.rate_limited %}; SEC refused {{ data.rate_limited }}, each followed by a pause{% endif %}</td><td></td></tr>
+{% endif %}{% endblock %}

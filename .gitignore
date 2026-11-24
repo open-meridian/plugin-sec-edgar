@@ -17,3 +17,6 @@ dist/
 CLAUDE.local.md
 .claude/settings.local.json
 .meridian/
+
+# What `make test` leaves behind.
+.test.log

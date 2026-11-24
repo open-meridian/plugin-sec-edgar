@@ -1,51 +1,58 @@
-# sec-edgar
+# SEC EDGAR plugin
 
-A Meridian data plugin, made by `meridian plugin new --role data`: it puts a
-vendor's prices into the deployment's lake.
+An [Open Meridian](https://github.com/open-meridian) data plugin that records
+the filings companies make with the U.S. Securities and Exchange Commission
+into a deployment's lake, read from EDGAR's public JSON.
 
-It runs beside a sidecar in a Meridian deployment and reaches nothing of the
-deployment's else. What it may publish and subscribe to comes from the roles
-`pyproject.toml` declares, once a deployment admin approves them when it is
-launched, never from its code. Its vendor is its own to reach: `vendor.py`
-stands in for one, answering from responses written into it, so it runs
-anywhere until you replace it with your vendor's client.
+- **One dataset, `edgar_filings`:** each filing's accession number, form,
+  kind of report, filing date, period, 8-K items and acceptance time, against
+  the company it names, found by its CIK.
+- **A watchlist** of CIKs or tickers whose filings are recorded as they
+  arrive; any other company's are fetched when a reader asks.
+- **Polite to SEC:** it sends the User-Agent you set and asks nothing
+  without one, keeps to the rate you set (never above SEC's 10 requests a
+  second), and pauses when SEC refuses.
+- **Traceable:** every row names the EDGAR response it was read from, kept
+  in the plugin's storage.
 
-Put it in a deployment that `meridian connect` signed you in to:
+It shows no filing on its own pages, which show its connection and its
+dataset. What it may publish and read comes from the role `pyproject.toml`
+declares, `data`, once a deployment admin approves it.
+
+## Use it
 
     meridian plugin upload
     meridian plugin launch sec-edgar 0.1.0 --instance sec-edgar
 
-A deployment admin then licenses its dataset, and entitles the plugins that
-may read it, on the dashboard's Data sources page. On a deployment installed
-for development, run it as you write it, each save running in about a second:
+Then, in the dashboard: set **User-Agent** (`Example Co admin@example.com`,
+your own), optionally the rate and the watchlist; license
+`sec-edgar:edgar_filings` on **Data sources**; and entitle the plugins that
+read it. [docs/setup.md](docs/setup.md) walks through each step.
 
-    meridian plugin dev --instance sec-edgar
+## Develop it
 
-Hold it to the rules every Meridian plugin is built to, and run its tests:
-
-    pip install -e . pytest
+    pip install -e '.[dev]'
+    python -m pytest
     meridian plugin check --verified --run-tests
 
-Its tests run the data suite the SDK carries (`tests/test_suite.py`): each
-case of the role mapped to one of the vendor's responses and run through the
-plugin's own conversion (`convert.py`). A plugin holding `data` is verified
-for it only by passing every case: keep each passing as you replace the
-vendor. A case about trades or quotes, which its daily dataset never
-publishes, is marked not presented, with why, until a dataset declares them. Every price is parsed from the vendor's text as a `Decimal`, never
-through a `float`; every subject and venue is resolved before a row names
-it, and what does not resolve is reported.
+The tests run offline against EDGAR responses committed under
+`src/sec_edgar/responses/`; nothing in the tests or CI calls SEC. With the
+**Sample data** setting on, a development deployment runs on the same
+responses. `make ci-local` runs lint, the tests, the plugin check and the
+image in containers.
 
-Its catalogue (`declaration.py`) declares the dataset it serves: its key,
-vendor, data types, how its rows arrive, its cadence, history, the vendor's
-terms and its day. Its pages are under the dashboard's Manage (`admin`):
-Connection, whether the vendor answers and what was asked of it, and
-Datasets, what it serves and the standing wants it keeps current. It shows
-no price: prices are the reading roles'. Each page is also a read tool for
-an agent an admin delegates to, `read_connection` and `read_datasets`. They
-are built on Open Meridian's plugin UI kit, which the dashboard serves on the
-plugin's own host at `/.meridian/ui/`.
+| Module | What it does |
+|---|---|
+| `edgar.py` | EDGAR's three requests, and the committed stand-in |
+| `limits.py` | the request pace and the pause after a refusal |
+| `feed.py` | turns submissions into filings, the watchlist, readers' wants |
+| `raw.py` | EDGAR's answers as received, and their window |
+| `settings.py`, `declared.py` | the settings and the dataset's declaration |
+| `page.py`, `records.py`, `templates/` | the Connection and Datasets pages, and their tools |
 
-`AGENTS.md` teaches any coding agent to build pages with the kit, and the same
-live loop; `CLAUDE.md` and the `develop-live` skill under `.claude/` lead
-Claude Code to it. Commit them with the plugin, so whoever works on it next
-has them too; `.dockerignore` keeps them out of its image.
+`AGENTS.md` is for coding agents working on the plugin.
+
+## Licence
+
+Apache-2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE). Not affiliated with
+or endorsed by the U.S. Securities and Exchange Commission.

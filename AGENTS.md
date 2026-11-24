@@ -1,14 +1,59 @@
 # sec-edgar
 
-A Meridian plugin, in Python on the open-meridian SDK. It runs beside a
-sidecar in a Meridian deployment and reaches nothing else: what it may publish
-and subscribe to comes from the roles `pyproject.toml` declares under
-`[tool.meridian]`, once a deployment admin approves them.
+SEC EDGAR's filings as an Open Meridian data plugin, in Python on the
+open-meridian SDK (0.37.1). It runs beside a sidecar in a Meridian
+deployment and records the filings companies make with the SEC into the
+deployment's lake as `Filing` rows, through the SDK's filings helpers
+(`meridian.roles.data.filings`), each against the company the deployment
+holds under its CIK. What it may publish and subscribe to comes from its one
+role, `data`, declared in `pyproject.toml`, once a deployment admin approves
+it.
 
-- `src/sec_edgar/__main__.py` runs the plugin: `meridian.run(...)`
-  registers its role classes on the sidecar and serves the pages;
-  `src/sec_edgar/page.py` declares them, each a view function and a
-  template under `templates/`, built on the plugin UI kit (below).
+## What it is
+
+- `src/sec_edgar/edgar.py` asks EDGAR three kinds of request, as JSON, with
+  the standard library: a company's submissions, one of its older pages, and
+  the ticker map. It sends the `edgar_user_agent` setting as the User-Agent
+  and asks nothing while it is missing or malformed (`check_user_agent`).
+  `SyntheticApi` answers from the responses committed under
+  `src/sec_edgar/responses/`.
+- `src/sec_edgar/limits.py` paces every request: at most the
+  `edgar_requests_per_second` setting, never above SEC's 10 a second, and
+  paused after a 429 or a 403 (Retry-After where SEC gives one, else a pause
+  that doubles to ten minutes).
+- `src/sec_edgar/feed.py` is the data role's class: the watchlist's
+  companies' filings pushed as they arrive, any other company's recorded
+  when the lake wants them, through the SDK's `meridian.roles.data.Wants`.
+  `__main__.py`'s `Lake` adds its lifecycle (the settings applied, the
+  five-minute check, tending, the licences and the feed delay).
+- `src/sec_edgar/raw.py` keeps every answer as received (never the
+  User-Agent), notes the answer each filing was first read from, and moves
+  months past their window as the SDK's settings say.
+- `src/sec_edgar/page.py`, `records.py` and `templates/` are the data role's
+  two pages under Manage, Connection and Datasets, each a read tool
+  (`read_connection`, `read_datasets`). The templates extend the role's and
+  add EDGAR's nuance only at its blocks.
+
+## The rules it keeps
+
+- **A company is its CIK.** A ticker is an aid, mapped through SEC's own
+  list; every filing is recorded against the record `resolve_company` finds
+  for its CIK, and a miss is reported, never a record made up.
+- **The accession number is the key.** A filing recorded again changes
+  nothing, so a restart or a repeated want is safe.
+- **No live calls in tests or CI.** Tests use the committed responses and a
+  placeholder User-Agent (`Example Co admin@example.com`), never a real
+  person's address. `tools/record.py` records real responses by hand.
+- **Never above SEC's rate.** No code path asks EDGAR except through the
+  limiter.
+- **A data plugin shows no filing.** Its pages show its connection, its
+  dataset and how its filers resolve.
+- **The suite.** `tests/test_suite.py` runs `meridian.suites.run("data", ...)`
+  on the plugin's own conversion; a case about a kind of data EDGAR's
+  filings never carry is named in `not_presented`, with why.
+
+## Building on the SDK
+
 - **Each role is one class** (SDK 0.35). For each role `[tool.meridian]`
   declares, write one class extending that role's base,
   `meridian.roles.<role>.Role`: the role's acts are its methods
@@ -442,9 +487,6 @@ async def rates(request):
 <om-live src="rates/live/events" snapshot="rates/live" for="rates"></om-live>
 <om-grid id="rates"></om-grid>
 ```
-
-The model behind this, and what comes next (a hot layer, standing
-analytics), is the design's `spec/one-data-access-model.md`.
 
 ## Checking it: `meridian plugin check`
 

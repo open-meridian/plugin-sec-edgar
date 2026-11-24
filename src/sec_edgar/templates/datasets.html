@@ -1,1 +1,89 @@
+{#- Datasets, at admin: the data role's (meridian/roles/data/datasets.html),
+    its notices and sections in its order and words, as tabs so the page fits
+    one screen, one shown at a time (`?view=`): "Served" (with "Lag" as a
+    column, how long after SEC accepted a filing it was recorded, and the
+    role's "Subjects" under it), "Wants", then EDGAR's: "Filers" (each
+    company read, by CIK, with its tickers, former names and the
+    deployment's company record or why none, searched and paged) and
+    "Terms". The role's content is drawn here rather than at its blocks for
+    the tabs alone; nothing is renamed or reordered. No filing. -#}
 {% extends "meridian/roles/data/datasets.html" %}
+{% import "meridian/kit.html" as kit %}
+{% import "meridian/roles/_rows.html" as om %}
+{% block status %}{{ kit.status({"state": state[0], "label": state[1], "detail": state[2], "at": checked_at, "at_label": "Last checked"}) }}{% endblock %}
+{% block content %}
+{% if not data.wants and view in ("served", "wants") %}
+{% if caller.deployment_admin %}
+{{ om.next_step("No wants yet", "Nothing reads this dataset until a deployment admin licenses it and entitles a plugin on", "data-sources", "Data sources") }}
+{% else %}
+{{ om.next_step("No wants yet", "Nothing reads this dataset until a deployment admin licenses it and entitles a plugin on Data sources. Ask a deployment admin to license it.") }}
+{% endif %}
+{% endif %}
+{% if data.unread %}<div class="notice warn" role="status" data-unread>A watchlist entry names no company, so nothing is read for it: {{ data.unread|join("; ") }}</div>{% endif %}
+<nav class="tabs" aria-label="Datasets" id="views">
+{% for key, label, count in [("served", "Served", data.served|length), ("wants", "Wants", wants), ("filers", "Filers", data.filers|length), ("terms", "Terms", none)] %}
+<a class="tab{% if view == key %} on{% endif %}" href="?view={{ key }}"{% if view == key %} aria-current="page"{% endif %}>{{ label }}{% if count is not none %} <span class="count">{{ count }}</span>{% endif %}</a>
+{% endfor %}
+</nav>
+{% if view == "served" %}
+<section class="panel">
+<h2>Served</h2>
+<table class="one-line">
+<thead><tr><th>Dataset</th><th class="wide-only">Data</th><th class="wide-only">Arrives</th><th class="wide-only">Day</th><th>Licence</th><th class="wide-only">Entitled at the vendor</th><th class="num">Recorded</th><th class="num wide-only">Declined</th><th class="wide-only">Last recorded</th><th class="wide-only">Lag</th><th class="more"><span class="visually-hidden">Details</span></th></tr></thead><tbody>
+{% for row in data.served %}
+{% set lag = data.lag|selectattr("dataset", "equalto", row.dataset)|first %}
+<tr><td><code>{{ row.dataset }}</code></td><td class="wide-only">{{ row.data }}</td><td class="wide-only">{{ row.arrives }}</td><td class="wide-only">{{ row.day }}</td><td>{{ "Licensed" if row.licensed else "Not licensed yet" }}</td><td class="wide-only">{{ row.entitled_at_vendor }}</td><td class="num">{{ row.recorded }}</td><td class="num wide-only">{{ row.declined }}</td><td class="wide-only">{{ row.last_recorded or "None yet" }}</td><td class="wide-only">{{ lag.median if lag and lag.filings else "None yet" }}</td>
+<td class="more"><details class="row-detail" name="served"><summary aria-label="Details of {{ row.dataset }}">…</summary><div class="row-detail-pop"><h3>{{ row.dataset }}</h3><dl><dt>Data</dt><dd>{{ row.data }}</dd><dt>Arrives</dt><dd>{{ row.arrives }}</dd><dt>Day</dt><dd>{{ row.day }}</dd><dt>Terms and pricing</dt><dd>{{ row.default_terms or "Not described" }}</dd><dt>Licence</dt><dd>{{ "Licensed" if row.licensed else "Not licensed yet" }}</dd><dt>Entitled at the vendor</dt><dd>{{ row.entitled_at_vendor }}</dd><dt>Recorded</dt><dd>{{ row.recorded }}</dd><dt>Declined</dt><dd>{{ row.declined }}</dd><dt>Last recorded</dt><dd>{{ row.last_recorded or "None yet" }}</dd><dt>Lag</dt><dd>{{ lag.said if lag else "None yet" }}</dd></dl></div></details></td></tr>
+{% endfor %}
+</tbody></table>
+</section>
+<section class="panel">
+<h2>Subjects</h2>
+<p>The deployment {{ "lets" if data.reads_instruments else "does not let" }} this plugin read an instrument's record.</p>
+</section>
+{% elif view == "wants" %}
+<section class="panel">
+<h2>Wants</h2>
+{% if wants > data.wants|length %}<p class="muted">The latest {{ data.wants|length }} of {{ wants }} wants are shown.</p>{% endif %}
+{% if data.wants %}
+<om-pager search="Search wants"><table class="one-line"><thead><tr><th>Dataset</th><th>Asked</th><th class="num">Subjects</th><th class="num wide-only">Recorded</th><th class="num wide-only">Declined</th><th>State</th></tr></thead><tbody>
+{% for want in data.wants %}
+<tr><td><code>{{ want.dataset }}</code></td><td>{{ want.asked }}</td><td class="num">{{ want.subjects }}</td><td class="num wide-only">{{ want.recorded }}</td><td class="num wide-only">{{ want.declined }}</td><td>{{ want.state }}</td></tr>
+{% endfor %}
+</tbody></table></om-pager>
+{% else %}
+<div class="empty-state"><strong>No wants yet</strong></div>
+{% endif %}
+</section>
+{% elif view == "filers" %}
+<section class="panel">
+<h2>Filers</h2>
+<form class="filters" method="get" role="search">
+<input type="hidden" name="view" value="filers">
+<input type="search" name="q" value="{{ query }}" placeholder="Search filers" aria-label="Search filers by CIK, name, ticker or former name">
+<button>Search</button>{% if query %} <a href="?view=filers">Clear</a>{% endif %}
+<span class="muted">{{ shown|length }} of {{ data.filers|length }}</span></form>
+{% if shown %}
+<om-pager>
+<table class="one-line">
+<thead><tr><th>CIK</th><th>Name</th><th class="wide-only">Kept current</th><th>Company record</th><th class="more"><span class="visually-hidden">Details</span></th></tr></thead>
+<tbody>
+{% for f in shown %}
+<tr data-filer="{{ f.cik }}"><td><code>{{ f.cik }}</code></td><td>{{ f.name or "Not read yet" }}{% if f.former_names %} {{ kit.badge("renamed") }}{% endif %}</td><td class="wide-only">{{ "Yes" if f.kept_current else "When wanted" }}</td><td>{% if f.company_id %}<code>{{ f.company_id }}</code>{% elif f.miss %}<span class="badge warn">{{ f.miss }}</span>{% else %}<span class="muted">Not resolved yet</span>{% endif %}</td><td class="more"><details class="row-detail" name="filers"><summary aria-label="Details of {{ f.cik }}">…</summary><div class="row-detail-pop"><h3>{{ f.name or f.cik }}</h3><dl><dt>CIK</dt><dd>{{ f.cik }}</dd><dt>Watchlist entry</dt><dd>{{ f.entry or "None: wanted by a reader" }}</dd><dt>Tickers</dt><dd>{{ f.tickers|join(", ") if f.tickers else "None stated" }}</dd><dt>Former names</dt><dd>{{ f.former_names|join("; ") if f.former_names else "None stated" }}</dd><dt>Company record</dt><dd>{% if f.company_id %}<code>{{ f.company_id }}</code>{% elif f.miss %}None: {{ f.miss }}; its filings are recorded with the filer as EDGAR states it{% else %}Not resolved yet{% endif %}</dd><dt>Latest filing</dt><dd>{% if f.latest_form %}{{ f.latest_form }}, {{ f.latest_filed|day }}{% else %}None read yet{% endif %}</dd><dt>Filings sent since start</dt><dd>{{ f.sent }}</dd><dt>Last error</dt><dd>{{ f.last_error or "None" }}</dd></dl></div></details></td></tr>
+{% endfor %}
+</tbody>
+</table>
+</om-pager>
+{% elif query %}
+<div class="empty-state"><strong>No filer matches "{{ query }}"</strong><p>Search by CIK, name, ticker or former name.</p></div>
+{% else %}
+<div class="empty-state"><strong>No filer read yet</strong><p>Companies appear here once the watchlist is read or a reader wants one.</p></div>
+{% endif %}
+</section>
+{% else %}
+<section class="panel">
+<h2>Terms</h2>
+<p>{{ data.terms }}</p>
+</section>
+{% endif %}
+{% endblock %}

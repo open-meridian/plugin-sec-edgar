@@ -1,0 +1,10 @@
+{
+ "about": "Three fictitious companies' submissions and the ticker map, written by hand in the layout EDGAR's JSON uses (its keys, columns and value formats), for the tests and sample data. The companies, CIKs, tickers and accession numbers are invented: no CIK this high has been assigned. tools/record.py records real responses in the same layout.",
+ "answers": {
+  "https://data.sec.gov/submissions/CIK0900000001.json": "CIK0900000001.json",
+  "https://data.sec.gov/submissions/CIK0900000001-submissions-001.json": "CIK0900000001-submissions-001.json",
+  "https://data.sec.gov/submissions/CIK0900000002.json": "CIK0900000002.json",
+  "https://data.sec.gov/submissions/CIK0900000003.json": "CIK0900000003.json",
+  "https://www.sec.gov/files/company_tickers.json": "company_tickers.json"
+ }
+}
