@@ -4,6 +4,7 @@ declined, and why."""
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
@@ -272,3 +273,21 @@ def test_acceptance_is_utc_and_the_day_is_new_yorks() -> None:
         accepted = datetime.fromtimestamp(each.accepted_ns / 1e9, NEW_YORK)
         assert accepted.date() == each.filed
     assert late.filed == date(2026, 11, 19)
+
+
+RECORDED = Path(__file__).parent / "recorded" / "CIK0000320193.json"
+
+
+def test_a_real_submissions_response_reads_whole_and_in_utc() -> None:
+    """Apple's submissions (CIK 320193) as data.sec.gov answered on
+    2026-11-24, kept as received: every row of `filings.recent` reads, and
+    the two filings whose headers were checked (20261119183021 and
+    20261116164916, Eastern) carry the same instants, stated in UTC."""
+    recent = json.loads(RECORDED.read_text())["filings"]["recent"]
+    held = {each.accession: each for each in stated_in(recent)}
+    assert len(held) == len(recent["accessionNumber"])
+    late = held["0001140361-26-044952"]
+    earlier = held["0001921094-26-001188"]
+    assert late.accepted_ns == _ns(datetime(2026, 11, 19, 18, 30, 21, tzinfo=NEW_YORK))
+    assert earlier.accepted_ns == _ns(datetime(2026, 11, 16, 16, 49, 16, tzinfo=NEW_YORK))
+    assert (late.filed, earlier.filed) == (date(2026, 11, 19), date(2026, 11, 16))
