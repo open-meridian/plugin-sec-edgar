@@ -11,8 +11,8 @@ a company makes on EDGAR, recorded as a `Filing` row under its filer:
 - `cadence` 0: filings arrive when companies file, and silence is no fault;
 - `history` from 1994, when EDGAR's electronic filings begin, in days to
   this version's release;
-- its day New York's: a filing's date is EDGAR's, in Eastern time; no
-  calendar;
+- its day New York's: a filing's date is EDGAR's, an Eastern day, though
+  its acceptance time is UTC; no calendar;
 - no venue;
 - its terms in plain words (`TERMS`), and no licence declared: a
   deployment admin sets the licence on the Data sources page;

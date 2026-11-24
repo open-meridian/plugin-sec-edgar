@@ -118,7 +118,7 @@ class Arriving(SyntheticApi):
         recent = answer["filings"]["recent"]
         new = {
             "accessionNumber": ARRIVING, "filingDate": "2026-11-24", "reportDate": "2026-11-23",
-            "acceptanceDateTime": "2026-11-24T08:30:00.000Z", "act": "34", "form": "8-K",
+            "acceptanceDateTime": "2026-11-24T13:30:00.000Z", "act": "34", "form": "8-K",
             "fileNumber": "001-10002", "filmNumber": "26999999", "items": "7.01,9.01",
             "core_type": "8-K", "size": 120000, "isXBRL": 1, "isInlineXBRL": 1,
             "primaryDocument": "ctso-20261123.htm", "primaryDocDescription": "8-K",

@@ -4,14 +4,14 @@ declined, and why."""
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 from meridian.plugin.v1 import operations_pb2 as ops
 from meridian.receive import Heard
 
 from sec_edgar.edgar import DATA, WWW, SyntheticApi, submissions_path
-from sec_edgar.feed import NEW_YORK, accepted_ns, kind_of
+from sec_edgar.feed import NEW_YORK, accepted_ns, kind_of, stated_in
 
 from conftest import (
     ARRIVING,
@@ -245,8 +245,30 @@ def test_forms_kinds_and_acceptance() -> None:
     assert kind_of("13F-HR") == "FILING_KIND_HOLDINGS_REPORT"
     assert kind_of("SCHEDULE 13D/A") == "FILING_KIND_BENEFICIAL_OWNERSHIP"
     assert kind_of("CORRESP") == "FILING_KIND_OTHER"
-    # EDGAR's acceptance is Eastern time, whatever its Z says.
-    assert accepted_ns("2026-11-20T16:05:31.000Z") == _ns(
+    # EDGAR's acceptance is UTC, as its Z says.
+    assert accepted_ns("2026-11-20T21:05:31.000Z") == _ns(
         datetime(2026, 11, 20, 16, 5, 31, tzinfo=NEW_YORK)
     )
     assert accepted_ns("") == 0
+
+
+def test_acceptance_is_utc_and_the_day_is_new_yorks() -> None:
+    """Two of Apple's filings (CIK 320193) as EDGAR states them: each filing's
+    header gives its acceptance in Eastern time (20261119183021 and
+    20261116164916), and the submissions JSON gives the same instants in
+    UTC. Only the accession number, acceptance and filing day are theirs."""
+    table = {
+        "accessionNumber": ["0001140361-26-044952", "0001921094-26-001188"],
+        "acceptanceDateTime": ["2026-11-19T23:30:21.000Z", "2026-11-16T21:49:16.000Z"],
+        "filingDate": ["2026-11-19", "2026-11-16"],
+    }
+    late, earlier = stated_in(table)
+    assert late.accepted_ns == _ns(datetime(2026, 11, 19, 23, 30, 21, tzinfo=UTC))
+    assert late.accepted_ns == _ns(datetime(2026, 11, 19, 18, 30, 21, tzinfo=NEW_YORK))
+    assert earlier.accepted_ns == _ns(datetime(2026, 11, 16, 16, 49, 16, tzinfo=NEW_YORK))
+    # The business day is New York's: each filing's day is its acceptance's
+    # day in Eastern time.
+    for each in (late, earlier):
+        accepted = datetime.fromtimestamp(each.accepted_ns / 1e9, NEW_YORK)
+        assert accepted.date() == each.filed
+    assert late.filed == date(2026, 11, 19)

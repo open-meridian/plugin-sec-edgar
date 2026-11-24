@@ -15,8 +15,8 @@ the lake changes nothing.
 number: the form as EDGAR states it, a kind from the platform's short list
 (`kind_of`), an 8-K's items, the period it reports on, the date it was
 filed, and SEC's acceptance as both its valid and its published time. EDGAR
-states the acceptance with a trailing `Z`, but in Eastern time, the hours
-EDGAR accepts filings (6:00 to 22:00), so it is read as New York's.
+states the acceptance in UTC (its trailing `Z`); only a filing's day is New
+York's, as EDGAR's filing date states it.
 
 **The filer.** A company is named by its CIK, ten digits, and resolved to
 the deployment's company record (`ENT-`) by that CIK, once per process; a
@@ -39,7 +39,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -74,13 +74,13 @@ def _ns(moment: datetime) -> int:
 
 
 def accepted_ns(text: str) -> int:
-    """EDGAR's acceptance (`2026-10-30T16:30:12.000Z`), in Eastern time
-    despite its `Z`, in nanoseconds; 0 where it does not read."""
+    """EDGAR's acceptance (`2026-10-30T20:30:12.000Z`), in UTC as its `Z`
+    says, in nanoseconds; 0 where it does not read."""
     try:
         moment = datetime.strptime(text[:19], "%Y-%m-%dT%H:%M:%S")
     except ValueError:
         return 0
-    return _ns(moment.replace(tzinfo=NEW_YORK))
+    return _ns(moment.replace(tzinfo=UTC))
 
 
 #: Each kind on the platform's short list, by the forms that are it; an
